@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Yash Kukreja — Data Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cabinet+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+:root{
+  --cream:#f5f0e8;--cream2:#ede7d9;--paper:#faf8f4;
+  --ink:#1a1714;--ink2:#3d3730;--ink3:#7a7168;
+  --rust:#c4622d;--rust2:#e8855a;--rust-bg:#fdf0e9;
+  --teal:#2a7b6f;--teal-bg:#eaf4f2;
+  --line:rgba(26,23,20,0.1);
+  --ff-serif:'Cormorant Garamond',Georgia,serif;
+  --ff-sans:'Cabinet Grotesk',system-ui,sans-serif;
+  --shadow:0 2px 24px rgba(26,23,20,0.08);
+}
+body{background:var(--paper);color:var(--ink);font-family:var(--ff-sans);font-weight:400;line-height:1.65;cursor:none;overflow-x:hidden}
+a{text-decoration:none}
+
+/* CURSOR */
+#cursor{position:fixed;width:10px;height:10px;border-radius:50%;background:var(--rust);pointer-events:none;z-index:9999;transition:transform .15s ease;transform:translate(-50%,-50%)}
+#cursor-ring{position:fixed;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--rust);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:0.5;transition:width .3s,height .3s,opacity .3s}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 4rem;background:rgba(250,248,244,0.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);transition:padding .3s}
+nav.scrolled{padding:.85rem 4rem;box-shadow:0 4px 24px rgba(26,23,20,0.06)}
+.nav-logo{font-family:var(--ff-serif);font-size:1.5rem;font-weight:600;color:var(--ink);letter-spacing:.01em}
+.nav-logo em{color:var(--rust);font-style:italic}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{font-size:.78rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);position:relative;padding-bottom:2px;transition:color .2s}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--rust);transition:width .3s}
+.nav-links a:hover{color:var(--rust)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-links a.active{color:var(--rust)}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;padding:8rem 4rem 5rem;position:relative;overflow:hidden}
+.hero-bg-text{position:absolute;right:-1rem;top:50%;transform:translateY(-50%);font-family:var(--ff-serif);font-size:clamp(9rem,16vw,18rem);font-weight:700;color:transparent;-webkit-text-stroke:1px rgba(196,98,45,0.06);line-height:1;user-select:none;pointer-events:none;white-space:nowrap}
+.hero-grid{max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 360px;gap:5rem;align-items:center}
+.hero-tag{display:inline-flex;align-items:center;gap:.6rem;background:var(--rust-bg);border:1px solid rgba(196,98,45,0.2);border-radius:100px;padding:.35rem 1rem;font-size:.73rem;font-weight:500;color:var(--rust);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.5rem}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:var(--rust);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+.hero-name{font-family:var(--ff-serif);font-weight:700;font-size:clamp(3.5rem,7vw,6.5rem);line-height:.95;letter-spacing:-0.02em;margin-bottom:1.5rem}
+.hero-name span{display:block}
+.hero-name .last{color:var(--rust);font-style:italic}
+.hero-desc{font-size:1.05rem;color:var(--ink2);max-width:480px;margin-bottom:2.5rem;font-weight:300;line-height:1.85}
+.hero-desc strong{font-weight:500;color:var(--ink)}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.75rem;border-radius:4px;font-family:var(--ff-sans);font-size:.85rem;font-weight:500;cursor:none;transition:all .25s;letter-spacing:.03em;border:none}
+.btn-solid{background:var(--ink);color:var(--paper)}
+.btn-solid:hover{background:var(--rust);color:white}
+.btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn-ghost:hover{border-color:var(--rust);color:var(--rust)}
+.hero-right{display:flex;flex-direction:column;gap:.9rem}
+.stat-card{background:white;border:1px solid var(--line);border-radius:12px;padding:1.2rem 1.4rem;display:flex;align-items:center;gap:1.1rem;box-shadow:var(--shadow);transition:transform .3s,box-shadow .3s}
+.stat-card:hover{transform:translateX(-6px);box-shadow:0 8px 32px rgba(26,23,20,0.12)}
+.stat-icon{width:42px;height:42px;border-radius:10px;display:grid;place-items:center;font-size:1.15rem;flex-shrink:0}
+.si-rust{background:var(--rust-bg)}.si-teal{background:var(--teal-bg)}
+.stat-label{font-size:.68rem;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.12rem}
+.stat-val{font-family:var(--ff-serif);font-size:1.2rem;font-weight:600;line-height:1.1}
+.stat-val em{color:var(--rust);font-style:normal}
+
+/* MARQUEE */
+.marquee-wrap{background:var(--ink);padding:.65rem 0;overflow:hidden}
+.marquee-track{display:flex;white-space:nowrap;animation:marquee 35s linear infinite}
+.marquee-track:hover{animation-play-state:paused}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee-item{display:inline-flex;align-items:center;gap:.75rem;padding:0 1.75rem;font-size:.73rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,.45)}
+.marquee-dot{width:4px;height:4px;border-radius:50%;background:var(--rust2);flex-shrink:0}
+
+/* SECTIONS */
+section{padding:7rem 4rem;position:relative}
+.container{max-width:1100px;margin:0 auto;width:100%}
+.s-label{font-size:.7rem;letter-spacing:.25em;text-transform:uppercase;color:var(--rust);font-weight:500;display:flex;align-items:center;gap:.8rem;margin-bottom:.5rem}
+.s-label::before{content:'';width:28px;height:1px;background:var(--rust);flex-shrink:0}
+h2.s-title{font-family:var(--ff-serif);font-weight:700;font-size:clamp(2.2rem,4vw,3.4rem);letter-spacing:-0.02em;line-height:1.05;margin-bottom:3.5rem;color:var(--ink)}
+h2.s-title em{color:var(--rust);font-style:italic}
+
+/* ABOUT */
+#about{background:var(--cream)}
+.about-layout{display:grid;grid-template-columns:1.2fr 1fr;gap:5rem;align-items:start}
+.about-body p{font-size:1rem;color:var(--ink2);margin-bottom:1.1rem;font-weight:300;line-height:1.85}
+.about-body p strong{color:var(--ink);font-weight:500}
+.about-langs{display:flex;gap:.6rem;margin-top:1.8rem;flex-wrap:wrap}
+.lang-pill{display:flex;align-items:center;gap:.45rem;padding:.35rem .9rem;border-radius:100px;font-size:.78rem;font-weight:500;background:white;border:1px solid var(--line);color:var(--ink2)}
+.about-info{display:flex;flex-direction:column;gap:.55rem}
+.info-row{display:flex;gap:1rem;padding:.85rem 1.1rem;border-radius:8px;background:white;border:1px solid var(--line);align-items:center;transition:border-color .2s,transform .2s}
+.info-row:hover{border-color:rgba(196,98,45,0.3);transform:translateX(4px)}
+.info-key{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);min-width:80px}
+.info-val{font-size:.87rem;font-weight:500;color:var(--ink)}
+.info-val a{color:var(--rust)}
+
+/* SKILLS */
+#skills{background:var(--paper)}
+.skills-layout{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.skill-card{background:white;border:1px solid var(--line);border-radius:14px;padding:1.75rem;transition:all .3s;position:relative;overflow:hidden}
+.skill-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rust),var(--rust2));transform:scaleX(0);transform-origin:left;transition:transform .35s}
+.skill-card:hover{box-shadow:var(--shadow);transform:translateY(-4px)}
+.skill-card:hover::after{transform:scaleX(1)}
+.skill-card-icon{font-size:1.5rem;margin-bottom:.9rem}
+.skill-card-title{font-family:var(--ff-serif);font-size:1.15rem;font-weight:600;margin-bottom:.9rem;color:var(--ink)}
+.tags{display:flex;flex-wrap:wrap;gap:.38rem}
+.tag{background:var(--cream);border:1px solid var(--cream2);border-radius:4px;padding:.22rem .65rem;font-size:.74rem;color:var(--ink2);font-weight:400;transition:all .2s}
+.tag:hover{background:var(--rust-bg);border-color:rgba(196,98,45,0.2);color:var(--rust)}
+
+/* EXPERIENCE */
+#experience{background:var(--cream)}
+.exp-list{display:flex;flex-direction:column}
+.exp-item{display:grid;grid-template-columns:160px 1fr;border-bottom:1px solid var(--line);padding:2.5rem 0;gap:3rem}
+.exp-item:first-child{padding-top:0}
+.exp-item:last-child{border-bottom:none;padding-bottom:0}
+.exp-period{font-size:.78rem;color:var(--ink3);padding-top:.35rem;line-height:1.6}
+.exp-company{font-size:.72rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--rust);margin-bottom:.3rem}
+.exp-role{font-family:var(--ff-serif);font-size:1.45rem;font-weight:600;margin-bottom:.2rem;line-height:1.15}
+.exp-location{font-size:.8rem;color:var(--ink3);margin-bottom:1rem}
+.exp-bullets{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.exp-bullets li{font-size:.9rem;color:var(--ink2);padding-left:1.3rem;position:relative;font-weight:300;line-height:1.7}
+.exp-bullets li::before{content:'';position:absolute;left:0;top:.72rem;width:5px;height:1px;background:var(--rust)}
+.exp-bullets li strong{color:var(--ink);font-weight:500}
+.exp-tags{display:flex;flex-wrap:wrap;gap:.38rem;margin-top:1rem}
+
+/* PROJECTS */
+#projects{background:var(--paper)}
+.project-list{display:flex;flex-direction:column;gap:1.5rem}
+.proj-card{background:white;border:1px solid var(--line);border-radius:14px;padding:2rem 2.25rem;display:grid;grid-template-columns:1fr auto;gap:1.5rem 3rem;align-items:start;transition:all .3s}
+.proj-card:hover{box-shadow:0 8px 40px rgba(26,23,20,0.09);transform:translateY(-2px)}
+.proj-period-badge{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);background:var(--teal-bg);padding:.25rem .75rem;border-radius:100px;font-weight:500;display:inline-block;margin-bottom:.75rem}
+.proj-title{font-family:var(--ff-serif);font-size:1.5rem;font-weight:600;margin-bottom:.6rem;color:var(--ink)}
+.proj-desc{font-size:.9rem;color:var(--ink2);font-weight:300;line-height:1.75}
+.proj-metrics{display:flex;flex-direction:column;gap:.75rem;min-width:155px}
+.proj-metric{background:var(--cream);border:1px solid var(--cream2);border-radius:8px;padding:.8rem 1rem;text-align:center}
+.proj-metric-val{font-family:var(--ff-serif);font-size:1.55rem;font-weight:700;color:var(--rust);line-height:1}
+.proj-metric-label{font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);margin-top:.2rem}
+
+/* EDUCATION */
+#education{background:var(--cream)}
+.edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:2.5rem}
+.edu-card{background:white;border:1px solid var(--line);border-radius:14px;padding:2rem;transition:all .3s}
+.edu-card:hover{box-shadow:var(--shadow);transform:translateY(-3px)}
+.edu-icon{font-size:2rem;margin-bottom:1.1rem}
+.edu-degree{font-family:var(--ff-serif);font-size:1.3rem;font-weight:600;margin-bottom:.2rem}
+.edu-uni{font-size:.85rem;font-weight:500;color:var(--rust);margin-bottom:.3rem}
+.edu-period{font-size:.78rem;color:var(--ink3);margin-bottom:.75rem}
+.edu-note{font-size:.82rem;color:var(--ink2);font-style:italic;font-weight:300}
+.cert-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.cert-card{background:white;border:1px solid var(--line);border-radius:10px;padding:1.25rem 1.4rem;transition:all .25s}
+.cert-card:hover{border-color:rgba(196,98,45,0.3);transform:translateY(-2px);box-shadow:var(--shadow)}
+.cert-name{font-size:.88rem;font-weight:500;margin-bottom:.3rem;color:var(--ink)}
+.cert-date{font-size:.73rem;color:var(--rust);font-weight:500}
+
+/* CONTACT */
+#contact{background:var(--ink);color:var(--cream);text-align:center}
+#contact .s-label{color:var(--rust2)}
+#contact .s-label::before{background:var(--rust2)}
+#contact h2{color:var(--paper)}
+.contact-sub{font-size:1rem;color:rgba(245,240,232,.55);max-width:500px;margin:0 auto 3rem;font-weight:300}
+.contact-row{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap}
+.clink{display:inline-flex;align-items:center;gap:.6rem;padding:.85rem 1.75rem;border-radius:6px;font-size:.85rem;font-weight:500;background:rgba(245,240,232,.06);border:1px solid rgba(245,240,232,.12);color:var(--cream);transition:all .25s}
+.clink:hover{background:var(--rust);border-color:var(--rust);color:white}
+
+footer{background:var(--ink);text-align:center;padding:1.5rem;font-size:.75rem;color:rgba(245,240,232,.25);border-top:1px solid rgba(245,240,232,.06)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  nav{padding:1rem 1.5rem}
+  section{padding:5rem 1.5rem}
+  #hero{padding:7rem 1.5rem 4rem}
+  .hero-grid{grid-template-columns:1fr;gap:3rem}
+  .hero-right{flex-direction:row;flex-wrap:wrap}
+  .stat-card{flex:1;min-width:150px}
+  .about-layout{grid-template-columns:1fr;gap:2.5rem}
+  .skills-layout{grid-template-columns:1fr 1fr}
+  .exp-item{grid-template-columns:1fr;gap:.5rem}
+  .proj-card{grid-template-columns:1fr}
+  .proj-metrics{flex-direction:row}
+  .edu-grid{grid-template-columns:1fr}
+  .cert-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:580px){
+  .skills-layout{grid-template-columns:1fr}
+  .cert-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .hero-bg-text{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<nav id="mainNav">
+  <div class="nav-logo">Yash <em>Kukreja</em></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section id="hero">
+  <div class="hero-bg-text">Data</div>
+  <div class="hero-grid">
+    <div>
+      <div class="hero-tag"><span class="hero-dot"></span>Open to Full-time Roles</div>
+      <h1 class="hero-name"><span>Yash</span><span class="last">Kukreja.</span></h1>
+      <p class="hero-desc"><strong>Data Engineer</strong> specialising in cloud data warehouses, ELT pipelines, and BI infrastructure. I turn messy, fragmented data into reliable systems that teams actually trust.</p>
+      <div class="hero-actions">
+        <a href="#experience" class="btn btn-solid">View Experience</a>
+        <a href="mailto:yashanilkumarkukreja@gmail.com" class="btn btn-ghost">Get in Touch ↗</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="stat-card"><div class="stat-icon si-rust">🏗️</div><div><div class="stat-label">Production Pipelines</div><div class="stat-val"><em><span class="count-up" data-target="300">0</span>+</em></div></div></div>
+      <div class="stat-card"><div class="stat-icon si-teal">📉</div><div><div class="stat-label">Data Latency Reduction</div><div class="stat-val"><em>~40%</em> faster</div></div></div>
+      <div class="stat-card"><div class="stat-icon si-rust">✅</div><div><div class="stat-label">Data Quality Defect Rate</div><div class="stat-val">Below <em>0.1%</em></div></div></div>
+      <div class="stat-card"><div class="stat-icon si-teal">🎓</div><div><div class="stat-label">Education</div><div class="stat-val">MSc <em>Uppsala</em></div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap"><div class="marquee-track" id="marqueeTrack"></div></div>
+
+<section id="about">
+  <div class="container">
+    <div class="s-label">Who I am</div>
+    <h2 class="s-title">Building data systems<br><em>people rely on</em></h2>
+    <div class="about-layout">
+      <div class="about-body reveal">
+        <p>I'm a <strong>Data Engineer</strong> with 2+ years of hands-on professional experience and an MSc in Computer Science from Uppsala University, Sweden. My focus is on building the invisible infrastructure that makes data-driven decisions possible.</p>
+        <p>At <strong>PwC Bangalore</strong>, I led a full Teradata-to-Snowflake warehouse migration — 300+ production pipelines, ~40% latency reduction, and a data-quality defect rate held below 0.1% across 50+ tables. I believe great data engineering is felt in the reliability, not noticed in the complexity.</p>
+        <p>I'm equally comfortable designing a three-layer dbt warehouse model from scratch as I am provisioning the AWS infrastructure that feeds it. I hold multiple certifications across AWS, Azure, and dbt.</p>
+        <div class="about-langs">
+          <span class="lang-pill">🌐 English — Fluent</span>
+          <span class="lang-pill">🇸🇪 Swedish — Basic (improving)</span>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:.15s">
+        <div class="about-info">
+          <div class="info-row"><span class="info-key">📍 Based</span><span class="info-val">Uppsala, Sweden</span></div>
+          <div class="info-row"><span class="info-key">🎓 Degree</span><span class="info-val">MSc Computer Science</span></div>
+          <div class="info-row"><span class="info-key">🏫 University</span><span class="info-val">Uppsala University</span></div>
+          <div class="info-row"><span class="info-key">💼 Looking for</span><span class="info-val">Data Engineering roles</span></div>
+          <div class="info-row"><span class="info-key">📧 Email</span><span class="info-val"><a href="mailto:yashanilkumarkukreja@gmail.com">yashanilkumarkukreja@gmail.com</a></span></div>
+          <div class="info-row"><span class="info-key">📱 Phone</span><span class="info-val"><a href="tel:+46734930394">+46 734 930 394</a></span></div>
+          <div class="info-row"><span class="info-key">🔗 LinkedIn</span><span class="info-val"><a href="https://linkedin.com/in/kukrejayash" target="_blank">linkedin.com/in/kukrejayash</a></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="container">
+    <div class="s-label">Toolbox</div>
+    <h2 class="s-title">Skills &amp; <em>Technologies</em></h2>
+    <div class="skills-layout">
+      <div class="skill-card reveal"><div class="skill-card-icon">⚙️</div><div class="skill-card-title">Data & ETL</div><div class="tags"><span class="tag">dbt</span><span class="tag">Apache Airflow</span><span class="tag">Informatica Cloud</span><span class="tag">Snowflake</span><span class="tag">Microsoft Fabric</span><span class="tag">MongoDB</span></div></div>
+      <div class="skill-card reveal" style="transition-delay:.08s"><div class="skill-card-icon">🏛️</div><div class="skill-card-title">Warehousing</div><div class="tags"><span class="tag">Dimensional Modelling</span><span class="tag">SCD Type 2</span><span class="tag">Staging / Mart</span><span class="tag">Data Quality</span><span class="tag">dbt Tests</span></div></div>
+      <div class="skill-card reveal" style="transition-delay:.16s"><div class="skill-card-icon">☁️</div><div class="skill-card-title">Cloud Platforms</div><div class="tags"><span class="tag">GCP BigQuery</span><span class="tag">Dataflow</span><span class="tag">Pub/Sub</span><span class="tag">GCS</span><span class="tag">AWS S3</span><span class="tag">Lambda</span><span class="tag">EC2</span><span class="tag">IAM</span><span class="tag">Azure</span></div></div>
+      <div class="skill-card reveal" style="transition-delay:.04s"><div class="skill-card-icon">💻</div><div class="skill-card-title">Languages</div><div class="tags"><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Java</span><span class="tag">C/C++</span></div></div>
+      <div class="skill-card reveal" style="transition-delay:.12s"><div class="skill-card-icon">📊</div><div class="skill-card-title">BI & DevOps</div><div class="tags"><span class="tag">Power BI</span><span class="tag">Terraform</span><span class="tag">Docker</span></div></div>
+      <div class="skill-card reveal" style="transition-delay:.2s"><div class="skill-card-icon">🤖</div><div class="skill-card-title">ML & AI</div><div class="tags"><span class="tag">PyTorch</span><span class="tag">TensorFlow/Keras</span><span class="tag">CNN</span><span class="tag">LSTM</span><span class="tag">Time-Series</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="container">
+    <div class="s-label">Where I've worked</div>
+    <h2 class="s-title">Work <em>Experience</em></h2>
+    <div class="exp-list">
+      <div class="exp-item reveal">
+        <div class="exp-period">Aug 2021 –<br>Aug 2023</div>
+        <div>
+          <div class="exp-company">PricewaterhouseCoopers (PwC)</div>
+          <div class="exp-role">ETL / Data Engineer</div>
+          <div class="exp-location">📍 Bangalore, India</div>
+          <ul class="exp-bullets">
+            <li>Designed and delivered <strong>300+ production pipelines</strong> (Informatica Cloud) migrating Teradata to Snowflake, reducing data latency by <strong>~40%</strong> and cutting BI report refresh from overnight to near real-time.</li>
+            <li>Implemented SQL validation layers — row-count reconciliation, null-rate checks, referential integrity — holding the <strong>data-quality defect rate below 0.1%</strong> across 50+ migrated tables.</li>
+            <li>Provisioned AWS infrastructure (S3, Lambda, EC2, IAM) to automate nightly loads, <strong>eliminating 8 hours/week</strong> of manual intervention and strengthening data access controls.</li>
+            <li>Partnered with 4 stakeholder groups to deliver <strong>Power BI dashboards</strong>, reducing time-to-insight from days to under an hour.</li>
+          </ul>
+          <div class="exp-tags"><span class="tag">Informatica Cloud</span><span class="tag">Snowflake</span><span class="tag">Teradata</span><span class="tag">AWS S3</span><span class="tag">Lambda</span><span class="tag">Power BI</span><span class="tag">SQL</span></div>
+        </div>
+      </div>
+      <div class="exp-item reveal" style="transition-delay:.1s">
+        <div class="exp-period">Feb 2021 –<br>Jun 2021</div>
+        <div>
+          <div class="exp-company">Neosoul Pvt Ltd</div>
+          <div class="exp-role">ML Engineer</div>
+          <div class="exp-location">📍 Bangalore, India</div>
+          <ul class="exp-bullets">
+            <li>Designed and trained a <strong>CNN model</strong> to classify car damage severity and predict insurance payout ranges, achieving <strong>78% accuracy</strong> on a held-out test set.</li>
+            <li>Curated and labelled <strong>~30,000 training images</strong> across severity levels, applying data augmentation to improve model robustness and generalisability.</li>
+          </ul>
+          <div class="exp-tags"><span class="tag">PyTorch</span><span class="tag">CNN</span><span class="tag">Computer Vision</span><span class="tag">Python</span><span class="tag">Data Augmentation</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="container">
+    <div class="s-label">Things I've built</div>
+    <h2 class="s-title">Project <em>Highlights</em></h2>
+    <div class="project-list">
+      <div class="proj-card reveal">
+        <div>
+          <div class="proj-period-badge">Sep – Dec 2024</div>
+          <div class="proj-title">Customer 360 Data Warehouse</div>
+          <p class="proj-desc">End-to-end ELT pipeline ingesting multi-source retail banking data (~5M rows/day) into Snowflake with parallel BigQuery validation. Three-layer dbt model (staging → intermediate → mart) with SCD Type 2 history tracking and 100% unit-test coverage. Airflow DAGs with dependency gating, retry logic, and failure alerting.</p>
+          <div class="tags" style="margin-top:1rem"><span class="tag">Snowflake</span><span class="tag">BigQuery</span><span class="tag">dbt</span><span class="tag">Apache Airflow</span><span class="tag">SCD Type 2</span><span class="tag">ELT</span><span class="tag">Python</span></div>
+        </div>
+        <div class="proj-metrics">
+          <div class="proj-metric"><div class="proj-metric-val">5M</div><div class="proj-metric-label">Rows / Day</div></div>
+          <div class="proj-metric"><div class="proj-metric-val">100%</div><div class="proj-metric-label">Test Coverage</div></div>
+          <div class="proj-metric"><div class="proj-metric-val">99%+</div><div class="proj-metric-label">Uptime</div></div>
+        </div>
+      </div>
+      <div class="proj-card reveal" style="transition-delay:.1s">
+        <div>
+          <div class="proj-period-badge">Jan – Apr 2024</div>
+          <div class="proj-title">Predictive Analytics Pipeline</div>
+          <p class="proj-desc">Time-series forecasting pipeline on Nifty 50 data (2016–2020) using an LSTM model with a sliding-window feature layer built for extensibility into live feeds. Achieved 79% directional accuracy — 18 percentage points above the baseline.</p>
+          <div class="tags" style="margin-top:1rem"><span class="tag">LSTM</span><span class="tag">PyTorch</span><span class="tag">Time Series</span><span class="tag">Python</span><span class="tag">Feature Engineering</span></div>
+        </div>
+        <div class="proj-metrics">
+          <div class="proj-metric"><div class="proj-metric-val">79%</div><div class="proj-metric-label">Directional Accuracy</div></div>
+          <div class="proj-metric"><div class="proj-metric-val">+18pp</div><div class="proj-metric-label">vs. Baseline</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="education">
+  <div class="container">
+    <div class="s-label">Academic Journey</div>
+    <h2 class="s-title">Education &amp; <em>Certifications</em></h2>
+    <div class="edu-grid reveal">
+      <div class="edu-card">
+        <div class="edu-icon">🎓</div>
+        <div class="edu-degree">MSc Computer Science</div>
+        <div class="edu-uni">Uppsala University</div>
+        <div class="edu-period">📍 Uppsala, Sweden · Aug 2023 – Sep 2025</div>
+        <div class="edu-note">Specialisations: Data Engineering · Software Engineering · Artificial Intelligence · HCI</div>
+      </div>
+      <div class="edu-card">
+        <div class="edu-icon">🏛️</div>
+        <div class="edu-degree">BE Computer Science</div>
+        <div class="edu-uni">PES University</div>
+        <div class="edu-period">📍 Bangalore, India · Jul 2017 – May 2021</div>
+        <div class="edu-note">Foundation in algorithms, systems, and software engineering</div>
+      </div>
+    </div>
+    <div class="s-label" style="margin-bottom:1.25rem">Certifications</div>
+    <div class="cert-grid reveal" style="transition-delay:.1s">
+      <div class="cert-card"><div class="cert-name">dbt Fundamentals</div><div class="cert-date">dbt Labs · Mar 2026</div></div>
+      <div class="cert-card"><div class="cert-name">AWS Databricks Platform Architect</div><div class="cert-date">Dec 2025 – Dec 2026</div></div>
+      <div class="cert-card"><div class="cert-name">Microsoft Azure Fundamentals</div><div class="cert-date">Apr 2023 – Present</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container">
+    <div class="s-label" style="justify-content:center">Let's Connect</div>
+    <h2 class="s-title" style="text-align:center">Get in <em>Touch</em></h2>
+    <p class="contact-sub">Open to new opportunities, collaborations, or just a good conversation about data engineering and pipelines.</p>
+    <div class="contact-row">
+      <a href="mailto:yashanilkumarkukreja@gmail.com" class="clink">✉️ Email Me</a>
+      <a href="tel:+46734930394" class="clink">📱 +46 734 930 394</a>
+      <a href="https://linkedin.com/in/kukrejayash" target="_blank" class="clink">🔗 LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 Yash Kukreja · Uppsala, Sweden</footer>
+
+<script>
+// CURSOR
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(loop)})();
+document.querySelectorAll('a,.btn,.stat-card,.skill-card,.proj-card,.edu-card,.cert-card,.info-row').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='52px';ring.style.height='52px';ring.style.opacity='0.25';cursor.style.transform='translate(-50%,-50%) scale(1.6)'});
+  el.addEventListener('mouseleave',()=>{ring.style.width='36px';ring.style.height='36px';ring.style.opacity='0.5';cursor.style.transform='translate(-50%,-50%) scale(1)'});
+});
+
+// NAV
+const nav=document.getElementById('mainNav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60),{passive:true});
+
+// MARQUEE
+const skills=['Snowflake','dbt','Apache Airflow','Informatica Cloud','BigQuery','AWS S3','Lambda','Power BI','Terraform','Docker','Python','SQL','PyTorch','SCD Type 2','Dimensional Modelling','Azure','GCP','Dataflow','MongoDB','Microsoft Fabric'];
+const track=document.getElementById('marqueeTrack');
+const chunk=skills.map(s=>`<span class="marquee-item"><span class="marquee-dot"></span>${s}</span>`).join('');
+track.innerHTML=chunk+chunk+chunk+chunk;
+
+// SCROLL REVEAL
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// COUNT UP
+function countUp(el,target){
+  let start=null;
+  (function step(ts){if(!start)start=ts;const p=Math.min((ts-start)/1600,1),ease=1-Math.pow(1-p,3);el.textContent=Math.floor(ease*target);if(p<1)requestAnimationFrame(step);else el.textContent=target})(performance.now());
+}
+const co=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){countUp(e.target,+e.target.dataset.target);co.unobserve(e.target)}}),{threshold:.5});
+document.querySelectorAll('.count-up').forEach(el=>co.observe(el));
+
+// ACTIVE NAV
+const secs=document.querySelectorAll('section[id]'),navAs=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',()=>{
+  let cur='';secs.forEach(s=>{if(scrollY>=s.offsetTop-130)cur=s.id});
+  navAs.forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+cur)});
+},{passive:true});
+</script>
+</body>
+</html>
